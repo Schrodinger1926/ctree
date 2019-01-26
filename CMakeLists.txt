@@ -7,5 +7,6 @@ set (EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR})
 set (LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/lib)
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/dependencies/cxxopts)
+add_subdirectory(${PROJECT_SOURCE_DIR}/dependencies/spdlog)
 add_executable(ctree ${PROJECT_SOURCE_DIR}/src/ctree.cpp)
-target_link_libraries(ctree cxxopts)
+target_link_libraries(ctree cxxopts spdlog)

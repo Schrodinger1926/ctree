@@ -37,7 +37,6 @@ parse(int argc, char* argv[])
     bool apple = false;
 
     options
-      .allow_unrecognised_options()
       .add_options()
       ("a,apple", "an apple", cxxopts::value<bool>(apple))
       ("b,bob", "Bob")
