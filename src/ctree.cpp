@@ -30,11 +30,13 @@ THE SOFTWARE.
 
 void init_db(){
 	std::cout << "Initializing database ..\n" << std::endl;
+	auto cwd     = utils::get_current_dir();
+	utils::touch(utils::join(cwd.get(), "CTREE").get());
 }
 
 void add_lib(const char* dependy, const char* name){
 	std::cout << "Adding library .. " << std::endl;
-	//utils::mkdir(dependy);
+	utils::make_dir(utils::join(dependy, name).get());
 }
 
 void add_exec(const char* dependy, const char* name){
@@ -65,6 +67,22 @@ void add_node(int argc , char* argv[]){
 		printf("[USAGE] %s %s [lib/exec (options)]\n", argv[0], argv[1]);
 }
 
+void clean_db(){
+	std::cout << "cleaning database .." << std::endl;
+}
+
+void clean(int argc, char* argv[]){
+	if(argc < 3){
+		std::cout << "[USAGE] printing usage ..\n" << std::endl;
+		return;
+	}
+
+	auto is_clean_db = parser::find_bool_option(argc, argv, "db", false);
+	
+	if(is_clean_db)
+		clean_db();
+}
+
 int main(int argc, char* argv[])
 {
 	if(argc < 2){
@@ -78,12 +96,16 @@ int main(int argc, char* argv[])
 	}
 
 	if(strcmp(argv[1], "add") == 0){
-		
 		add_node(argc, argv);
 		return 0;
 	}
 	
-	/* cleanup */
+	if(strcmp(argv[1], "clean") == 0){
+		clean(argc, argv);
+		return 0;
+	}
+
+	/* mem cleanup */
 
 	return 0;
 }

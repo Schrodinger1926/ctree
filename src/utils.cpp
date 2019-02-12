@@ -5,6 +5,7 @@
 #include <sys/stat.h> 
 #include <sys/types.h>
 #include <iostream>
+#include <fstream>
 
 namespace utils{
 	std::unique_ptr<char> get_current_dir(){
@@ -24,6 +25,12 @@ namespace utils{
 		}
 	}
 	
+	void touch(char* filepath){
+			std::ofstream outfile(filepath);
+			outfile << "" << std::endl;
+			outfile.close();
+	}
+
 	std::unique_ptr<char> join(const char* dependy, const char* name){
 		std::unique_ptr<char> dir(new char[MAXPATHLEN]);
 		strcpy(dir.get(), dependy);
