@@ -27,7 +27,6 @@ namespace utils{
 	
 	void touch(char* filepath){
 			std::ofstream outfile(filepath);
-			outfile << "" << std::endl;
 			outfile.close();
 	}
 

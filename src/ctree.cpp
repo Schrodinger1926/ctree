@@ -27,6 +27,7 @@ THE SOFTWARE.
 #include <memory>
 #include "utils.h"
 #include "parser.h"
+#include "config.h"
 
 void init_db(){
 	std::cout << "Initializing database ..\n" << std::endl;
@@ -34,20 +35,44 @@ void init_db(){
 	utils::touch(utils::join(cwd.get(), "CTREE").get());
 }
 
+void add_layout(const char* base_dir){
+  /* Create dirs
+   1. include/
+   2. src/
+   3. dependencies/
+   4. example/
+   5. test/
+  */
+  
+  utils::make_dir(utils::join(base_dir, CONFIG::LAYOUT::INC).get());
+  utils::make_dir(utils::join(base_dir, CONFIG::LAYOUT::SRC).get());
+  utils::make_dir(utils::join(base_dir, CONFIG::LAYOUT::DEP).get());
+  utils::make_dir(utils::join(base_dir, CONFIG::LAYOUT::EXP).get());
+  utils::make_dir(utils::join(base_dir, CONFIG::LAYOUT::TST).get());
+
+   /* Create files
+   1. CMakeLists.txt
+   */
+  utils::touch(utils::join(base_dir, CONFIG::LAYOUT::CMK).get());
+  
+}
+
 void add_lib(const char* dependy, const char* name){
 	std::cout << "Adding library .. " << std::endl;
-	utils::make_dir(utils::join(dependy, name).get());
+	add_layout(dependy);
 }
 
 void add_exec(const char* dependy, const char* name){
 	std::cout << "Adding executable .. " << std::endl;
-	utils::make_dir(utils::join(dependy, name).get());
+	add_layout(dependy);
 }
 
 void add_node(int argc , char* argv[]){
 	if(argc < 3){
 		printf("[USAGE] %s %s [lib/exec (options)]\n", argv[0], argv[1]);
-	}
+    printf("options\n --dependy,\n target to which this lib/exec must link to\n");
+	  return;
+  }
 	
 	auto cwd     = utils::get_current_dir();
 	auto dependy = parser::find_char_option(argc, argv, "--dependy", cwd.get());
@@ -69,6 +94,10 @@ void add_node(int argc , char* argv[]){
 
 void clean_db(){
 	std::cout << "cleaning database .." << std::endl;
+  //TODO:
+  //1. Recurrsively search UP for directory containing CTREE db
+  //2. and delete the creature
+
 }
 
 void clean(int argc, char* argv[]){
