@@ -25,8 +25,9 @@ namespace utils{
 		}
 	}
 	
-	void touch(char* filepath){
+	void touch(const char* filepath, const char* content){
 			std::ofstream outfile(filepath);
+			outfile << content;
 			outfile.close();
 	}
 

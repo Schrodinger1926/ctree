@@ -28,37 +28,60 @@ THE SOFTWARE.
 #include "utils.h"
 #include "parser.h"
 #include "config.h"
+#include <nlohmann/json.hpp>
+
+using json = nlohmann::json;
 
 void init_db(){
 	std::cout << "Initializing database ..\n" << std::endl;
 	auto cwd     = utils::get_current_dir();
-	utils::touch(utils::join(cwd.get(), "CTREE").get());
+	utils::touch(utils::join(cwd.get(), "CTREEDB").get(), "{}");
 }
 
 void add_layout(const char* base_dir){
-  /* Create dirs
-   1. include/
-   2. src/
-   3. dependencies/
-   4. example/
-   5. test/
-  */
-  
-  utils::make_dir(utils::join(base_dir, CONFIG::LAYOUT::INC).get());
-  utils::make_dir(utils::join(base_dir, CONFIG::LAYOUT::SRC).get());
-  utils::make_dir(utils::join(base_dir, CONFIG::LAYOUT::DEP).get());
-  utils::make_dir(utils::join(base_dir, CONFIG::LAYOUT::EXP).get());
-  utils::make_dir(utils::join(base_dir, CONFIG::LAYOUT::TST).get());
+	/* Create dirs
+	   1. include/
+	   2. src/
+	   3. dependencies/
+	   4. example/
+	   5. test/
+	 */
 
-   /* Create files
-   1. CMakeLists.txt
-   */
-  utils::touch(utils::join(base_dir, CONFIG::LAYOUT::CMK).get());
-  
+	utils::make_dir(utils::join(base_dir, CONFIG::LAYOUT::INC).get());
+	utils::make_dir(utils::join(base_dir, CONFIG::LAYOUT::SRC).get());
+	utils::make_dir(utils::join(base_dir, CONFIG::LAYOUT::DEP).get());
+	utils::make_dir(utils::join(base_dir, CONFIG::LAYOUT::EXP).get());
+	utils::make_dir(utils::join(base_dir, CONFIG::LAYOUT::TST).get());
+
+	/* Create files
+	   1. CMakeLists.txt
+	 */
+	utils::touch(utils::join(base_dir, CONFIG::LAYOUT::CMK).get(), NULL);
+}
+
+
+std::unique_ptr<char> locate_db(){
+	//TODO: implement this
+}
+
+void is_root_empty(){
+	//1. recurrse up the tree untill you find CTREEDB
+	//2. parse it
+	//3. check if root is defined or not
+	return true;
+}
+
+void set_db_root(const char* target){
+	//1. recurrse up the tree untill you find CTREEDB
+	//2. parse it
+	//3. define key, val = root, target
 }
 
 void add_lib(const char* dependy, const char* name){
 	std::cout << "Adding library .. " << std::endl;
+	if(is_root_empty()){
+		set_db_root(name);
+	}
 	add_layout(dependy);
 }
 
@@ -70,9 +93,9 @@ void add_exec(const char* dependy, const char* name){
 void add_node(int argc , char* argv[]){
 	if(argc < 3){
 		printf("[USAGE] %s %s [lib/exec (options)]\n", argv[0], argv[1]);
-    printf("options\n --dependy,\n target to which this lib/exec must link to\n");
-	  return;
-  }
+    	printf("options\n --dependy,\n target to which this lib/exec must link to\n");
+	    return;
+  	}
 	
 	auto cwd     = utils::get_current_dir();
 	auto dependy = parser::find_char_option(argc, argv, "--dependy", cwd.get());
@@ -105,11 +128,16 @@ void clean(int argc, char* argv[]){
 		std::cout << "[USAGE] printing usage ..\n" << std::endl;
 		return;
 	}
-
-	auto is_clean_db = parser::find_bool_option(argc, argv, "db", false);
 	
+	auto is_clean_db = parser::find_bool_option(argc, argv, "db", false);
 	if(is_clean_db)
 		clean_db();
+}
+
+bool is_initialized(){
+	//1. Traverse up the tree and find project root
+	//2. check if database exists
+	return true;
 }
 
 int main(int argc, char* argv[])
@@ -125,10 +153,15 @@ int main(int argc, char* argv[])
 	}
 
 	if(strcmp(argv[1], "add") == 0){
-		add_node(argc, argv);
+		if(is_initialized())
+			add_node(argc, argv);
 		return 0;
 	}
 	
+	if(strcmp(argv[1], "undo") == 0){
+		std::cout << "To be implemented .." << std::endl;
+		return 0;
+	}
 	if(strcmp(argv[1], "clean") == 0){
 		clean(argc, argv);
 		return 0;

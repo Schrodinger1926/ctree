@@ -1,0 +1,34 @@
+{
+	"root": "ctree",
+	"ctree":{
+		"type": "library",
+		"child_targets": [
+			"cxxopts",
+			"spdlog",
+			"gtest"
+			],
+		"parent_target": "NULL",
+		"path": "/home/sidharth/ctree"
+	},
+	"cxxopts":{
+		"type": "library",
+		"child_targets": [
+			],
+		"parent_target": "ctree",
+		"path": "/home/sidharth/ctree/dependencies/cxxopts"
+	},
+	"gtest":{
+		"type": "library",
+		"child_targets": [
+			],
+		"parent_target": "ctree",
+		"path": "/home/sidharth/ctree/dependencies/gtest"
+	},
+	"spdlog":{
+		"type": "library",
+		"child_targets": [
+			],
+		"parent_target": "ctree",
+		"path": "/home/sidharth/ctree/dependencies/spdlog"
+	}
+}
